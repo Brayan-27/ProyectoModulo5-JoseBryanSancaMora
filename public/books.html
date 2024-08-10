@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Libros</title>
+    <style>
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 20px; 
+            overflow: hidden;
+        }
+        
+        table, th, td {
+            border: 3px solid black;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #90261d;
+
+            color: white; 
+        }
+        
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Libros</h1>
+    <table id="book-table">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Género</th>
+                <th>Publicado</th>
+            </tr>
+        </thead>
+
+        <tbody id="book-body">
+            <!-- Aquí se insertarán los datos de los libros -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchBooks() {
+            try {
+                const response = await fetch('/api/libros');
+                const libros = await response.json();
+
+                const tableBody = document.getElementById('book-body');
+                tableBody.innerHTML = '';
+
+                libros.forEach(libro => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${libro.titulo}</td>
+                        <td>${libro.autor}</td>
+                        <td>${libro.genero}</td>
+                        <td>${new Date(libro.publicado).toLocaleDateString()}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error al obtener los libros:', error);
+                const tableBody = document.getElementById('book-body');
+                tableBody.innerHTML = '<tr><td colspan="4">Error al obtener los libros</td></tr>';
+            }
+        }
+
+        
+        
+        fetchBooks();
+    </script>
+</body>
+</html>
